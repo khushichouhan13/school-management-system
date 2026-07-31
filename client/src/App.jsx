@@ -16,6 +16,8 @@ import StudentProfile from './pages/StudentProfile';
 export const AuthContext = createContext(null);
 export const ToastContext = createContext(null);
 
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem('edunex_token') || null);
   const [user, setUser] = useState(null);
@@ -64,7 +66,7 @@ export default function App() {
   const verifySession = async () => {
     setLoading(true);
     try {
-      const response = await fetch('/api/auth/me', {
+      const response = await fetch(`${API_BASE}/api/auth/me`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -114,7 +116,7 @@ export default function App() {
     if (body) config.body = JSON.stringify(body);
 
     try {
-      const res = await fetch(`/api${endpoint}`, config);
+      const res = await fetch(`${API_BASE}/api${endpoint}`, config);
       const data = await res.json();
       if (!res.ok) {
         if (res.status === 401) {
