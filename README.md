@@ -66,48 +66,10 @@ schoolManagementSystem/
 └── README.md               # Documentation guide
 ```
 
----
 
-## ⚙️ Installation & Setup
 
-### 1. Prerequisites
-- [Node.js](https://nodejs.org/) installed (v18+ recommended)
-- MongoDB instance running locally or on Atlas.
+ 
 
-### 2. Environment Configuration
-Create a `.env` file in the `server` directory:
-```env
-PORT=5000
-MONGO_URI=mongodb://127.0.0.1:27017/school_erp
-JWT_SECRET=yoursecretjwtkey
-NODE_ENV=development
-```
+ 
 
-### 3. Database Seeding
-To run the database seeder script and pre-populate your database with demo Admin, Teachers, and Students:
-```bash
-cd server
-npm run seed
-```
-
-### 4. Running the Application
-
-#### Backend Express Server
-```bash
-cd server
-npm run dev      # Runs on port 5000 with nodemon
-```
-
-#### Frontend React Client
-```bash
-cd client
-npm run dev      # Launches on http://localhost:5173
-```
-
----
-
-## 👤 Quick Access Demo Credentials
-Once you run the database seeder, you can log in directly using the preconfigured credentials:
-- **Admin**: `admin@school.com` (password: `admin123`)
-- **Teacher**: `john.doe@school.com` (password: `teacher123`)
-- **Student**: `student1@school.com` (password: `student123`)
+ 
