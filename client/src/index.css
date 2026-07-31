@@ -16,6 +16,11 @@
   --glass-bg: rgba(17, 19, 38, 0.65);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-glow: rgba(99, 102, 241, 0.15);
+  --glass-bg-hover: rgba(28, 31, 58, 0.85);
+  --header-bg: rgba(17, 19, 38, 0.85);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.15);
+  --shadow-card-hover: 0 12px 30px rgba(0, 0, 0, 0.25);
+  --card-bg-gradient: linear-gradient(135deg, rgba(25, 28, 56, 0.75) 0%, rgba(17, 19, 38, 0.65) 100%);
   
   --accent-indigo: #6366f1;
   --accent-indigo-hover: #4f46e5;
@@ -621,8 +626,9 @@ textarea:focus {
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--glass-border);
-  background-color: rgba(10, 11, 20, 0.3);
+  background-color: var(--header-bg);
   backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .sidebar-toggle-btn {
@@ -719,22 +725,27 @@ textarea:focus {
 }
 
 .stat-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(12px);
+  background: var(--card-bg-gradient);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
   padding: 24px;
-  border-radius: var(--border-radius-md);
+  border-radius: 16px;
   display: flex;
   align-items: center;
   gap: 20px;
   position: relative;
   overflow: hidden;
-  transition: var(--transition-smooth);
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-card);
 }
 
 .stat-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255, 255, 255, 0.15);
+  transform: scale(1.03);
+  background: var(--glass-bg-hover);
+  box-shadow: var(--shadow-card-hover);
+  border-color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
 }
 
 .stat-icon {
@@ -800,12 +811,135 @@ textarea:focus {
 
 /* Cards Styling */
 .glass-card {
-  background: var(--glass-bg);
+  background: var(--card-bg-gradient);
   backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
-  border-radius: var(--border-radius-md);
+  border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-card);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: scale(1.03);
+  background: var(--glass-bg-hover);
+  box-shadow: var(--shadow-card-hover);
+  border-color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+/* Card left vertical thin colored lines (Premium curved pill strip) */
+.card-students,
+.card-faculty,
+.card-classes,
+.card-attendance,
+.card-fee {
+  position: relative;
+  overflow: hidden;
+}
+
+.card-students::before,
+.card-faculty::before,
+.card-classes::before,
+.card-attendance::before,
+.card-fee::before,
+.card-expiring::before,
+.card-expired::before,
+.card-left-students::before,
+.card-all-students::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  z-index: 5;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+/* Students: Blue gradient */
+.card-students::before {
+  background: linear-gradient(180deg, #3b82f6, #60a5fa);
+}
+.card-students:hover::before {
+  background: linear-gradient(180deg, #60a5fa, #93c5fd);
+  filter: drop-shadow(0 0 6px rgba(96, 165, 250, 0.9));
+}
+
+/* Faculty: Purple gradient */
+.card-faculty::before {
+  background: linear-gradient(180deg, #8b5cf6, #c084fc);
+}
+.card-faculty:hover::before {
+  background: linear-gradient(180deg, #a78bfa, #d8b4fe);
+  filter: drop-shadow(0 0 6px rgba(167, 139, 250, 0.9));
+}
+
+/* Classes: Pink gradient */
+.card-classes::before {
+  background: linear-gradient(180deg, #ec4899, #f472b6);
+}
+.card-classes:hover::before {
+  background: linear-gradient(180deg, #f472b6, #fbcfe8);
+  filter: drop-shadow(0 0 6px rgba(244, 114, 182, 0.9));
+}
+
+/* Attendance: Green gradient */
+.card-attendance::before {
+  background: linear-gradient(180deg, #10b981, #34d399);
+}
+.card-attendance:hover::before {
+  background: linear-gradient(180deg, #34d399, #6ee7b7);
+  filter: drop-shadow(0 0 6px rgba(52, 211, 153, 0.9));
+}
+
+/* Fee: Indigo gradient */
+.card-fee::before {
+  background: linear-gradient(180deg, #6366f1, #818cf8);
+}
+.card-fee:hover::before {
+  background: linear-gradient(180deg, #818cf8, #c7d2fe);
+  filter: drop-shadow(0 0 6px rgba(129, 140, 248, 0.9));
+}
+
+/* Expiring: Orange gradient */
+.card-expiring::before {
+  background: linear-gradient(180deg, #f59e0b, #fbbf24);
+}
+.card-expiring:hover::before {
+  background: linear-gradient(180deg, #fbbf24, #fde047);
+  filter: drop-shadow(0 0 6px rgba(245, 158, 11, 0.9));
+}
+
+/* Expired: Red gradient */
+.card-expired::before {
+  background: linear-gradient(180deg, #ef4444, #f87171);
+}
+.card-expired:hover::before {
+  background: linear-gradient(180deg, #f87171, #fca5a5);
+  filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.9));
+}
+
+/* Left: Grey gradient */
+.card-left-students::before {
+  background: linear-gradient(180deg, #64748b, #94a3b8);
+}
+.card-left-students:hover::before {
+  background: linear-gradient(180deg, #94a3b8, #cbd5e1);
+  filter: drop-shadow(0 0 6px rgba(100, 116, 139, 0.9));
+}
+
+/* All Students: Blue/Indigo gradient */
+.card-all-students::before {
+  background: linear-gradient(180deg, #4f46e5, #818cf8);
+}
+.card-all-students:hover::before {
+  background: linear-gradient(180deg, #818cf8, #c7d2fe);
+  filter: drop-shadow(0 0 6px rgba(79, 70, 229, 0.9));
 }
 
 .card-header {
@@ -2056,6 +2190,25 @@ textarea:focus {
     align-items: center;
     text-align: center;
   }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  
+  .header-actions-area {
+    width: 100%;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  
+  .btn-import, .btn-add-student {
+    flex: 1;
+    justify-content: center;
+    padding: 10px 12px;
+    font-size: 0.85rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -2163,8 +2316,12 @@ textarea:focus {
   --text-primary: #0f172a;
   --text-secondary: #475569;
   --text-muted: #64748b;
+  --header-bg: rgba(255, 255, 255, 0.85);
   
+  --glass-bg-hover: rgba(255, 255, 255, 0.9);
   --shadow-card: 0 8px 32px 0 rgba(99, 102, 241, 0.08);
+  --shadow-card-hover: 0 12px 36px 0 rgba(99, 102, 241, 0.15);
+  --card-bg-gradient: linear-gradient(135deg, rgba(240, 244, 255, 0.85) 0%, rgba(245, 243, 255, 0.85) 100%);
 }
 
 [data-theme="light"] body {
@@ -2230,4 +2387,205 @@ textarea:focus {
 
 [data-theme="light"] .modal-card {
   background: #ffffff;
+}
+
+/* StudyLib Overrides */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.header-title-area {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.page-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.page-subtitle {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.header-actions-area {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-import {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  font-weight: 500;
+  transition: var(--transition-fast);
+}
+
+.btn-import:hover {
+  background-color: var(--bg-tertiary);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.btn-import i {
+  font-size: 1.1rem;
+}
+
+.text-emerald {
+  color: #10b981 !important;
+}
+
+.btn-add-student {
+  background-color: var(--accent-indigo);
+  color: #ffffff;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  font-weight: 600;
+  transition: var(--transition-fast);
+}
+
+.btn-add-student:hover {
+  background-color: var(--accent-indigo-hover);
+}
+
+/* Stat card structure for StudyLib */
+.stat-card-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+}
+
+.icon-circle-warning {
+  background-color: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+}
+
+.icon-circle-danger {
+  background-color: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+}
+
+.icon-circle-grey {
+  background-color: rgba(100, 116, 139, 0.12);
+  color: #94a3b8;
+}
+
+.icon-circle-primary {
+  background-color: rgba(99, 102, 241, 0.12);
+  color: var(--accent-indigo);
+}
+
+.stat-card-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.stat-card-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: 0.05em;
+}
+
+.stat-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+
+.badge-light-warning {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.badge-light-danger {
+  background-color: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+}
+
+.badge-light-grey {
+  background-color: rgba(100, 116, 139, 0.15);
+  color: #94a3b8;
+}
+
+.badge-primary-active {
+  background-color: var(--accent-indigo);
+  color: #ffffff;
+}
+
+.stat-card-number {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin: 0;
+  line-height: 1;
+}
+
+/* Color class helpers */
+.text-warning { color: #f59e0b !important; }
+.text-danger { color: #ef4444 !important; }
+.text-grey { color: #94a3b8 !important; }
+.text-primary { color: var(--accent-indigo) !important; }
+
+/* Student Profile Cell in Table */
+.student-profile-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.avatar-initials {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+}
+
+.student-meta-cell {
+  display: flex;
+  flex-direction: column;
+}
+
+.student-name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.student-email {
+  font-size: 0.75rem;
+  color: var(--text-muted);
 }

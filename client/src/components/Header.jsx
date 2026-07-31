@@ -66,10 +66,6 @@ export default function Header({ activeView }) {
           <i className={theme === 'light' ? 'fa-solid fa-sun' : 'fa-solid fa-moon'}></i>
         </button>
 
-        <div className="header-icon-badge">
-          <i className="fa-regular fa-bell"></i>
-          <span className="dot"></span>
-        </div>
         <div className="header-profile-quick">
           <img src={avatarUrl} alt="Avatar" />
         </div>

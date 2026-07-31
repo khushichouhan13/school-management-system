@@ -186,11 +186,99 @@ export default function Students() {
     }
   };
 
+  const getAvatarBg = (name) => {
+    const colors = ['#6366f1', '#8b5cf6', '#ec4899', '#10b981', '#f59e0b', '#06b6d4'];
+    let hash = 0;
+    const cleanName = name || 'Student';
+    for (let i = 0; i < cleanName.length; i++) {
+      hash = cleanName.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return colors[Math.abs(hash) % colors.length];
+  };
+
   const startIdx = total > 0 ? (page - 1) * 10 + 1 : 0;
   const endIdx = Math.min(page * 10, total);
 
   return (
     <div>
+      {/* Title & Top Action Bar */}
+      <div className="page-header mb-4">
+        <div className="header-title-area">
+          <h2 className="page-title">Students</h2>
+          <span className="page-subtitle">{total} total registered students</span>
+        </div>
+        <div className="header-actions-area">
+          <button className="btn-import" onClick={() => showToast('Import feature coming soon!')}>
+            <i className="fa-solid fa-file-excel text-emerald"></i>
+            <span>Import Excel / CSV</span>
+          </button>
+          <button onClick={() => openEnrollModal()} className="btn-add-student">
+            <i className="fa-solid fa-plus"></i>
+            <span>Add Student</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Top 4 Cards Grid */}
+      <div className="stats-grid mb-4">
+        {/* Card 1: Plans Expiring */}
+        <div className="stat-card card-expiring card-glow-warning">
+          <div className="stat-card-left">
+            <div className="icon-circle icon-circle-warning">
+              <i className="fa-regular fa-clock"></i>
+            </div>
+            <div className="stat-card-info">
+              <span className="stat-card-title">PLANS EXPIRING IN 7 DAYS</span>
+              <span className="stat-badge badge-light-warning">Show</span>
+            </div>
+          </div>
+          <h1 className="stat-card-number text-warning">0</h1>
+        </div>
+
+        {/* Card 2: Expired Plans */}
+        <div className="stat-card card-expired card-glow-danger">
+          <div className="stat-card-left">
+            <div className="icon-circle icon-circle-danger">
+              <i className="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div className="stat-card-info">
+              <span className="stat-card-title">EXPIRED PLANS</span>
+              <span className="stat-badge badge-light-danger">Show</span>
+            </div>
+          </div>
+          <h1 className="stat-card-number text-danger">0</h1>
+        </div>
+
+        {/* Card 3: Left Students */}
+        <div className="stat-card card-left-students card-glow-grey">
+          <div className="stat-card-left">
+            <div className="icon-circle icon-circle-grey">
+              <i className="fa-regular fa-user"></i>
+            </div>
+            <div className="stat-card-info">
+              <span className="stat-card-title">LEFT STUDENTS</span>
+              <span className="stat-badge badge-light-grey">Show</span>
+            </div>
+          </div>
+          <h1 className="stat-card-number text-grey">1</h1>
+        </div>
+
+        {/* Card 4: All Students */}
+        <div className="stat-card card-all-students card-glow-primary">
+          <div className="stat-card-left">
+            <div className="icon-circle icon-circle-primary">
+              <i className="fa-solid fa-users"></i>
+            </div>
+            <div className="stat-card-info">
+              <span className="stat-card-title">ALL STUDENTS</span>
+              <span className="stat-badge badge-primary-active">Active</span>
+            </div>
+          </div>
+          <h1 className="stat-card-number text-primary">{total}</h1>
+        </div>
+      </div>
+
+      {/* Main Table Container */}
       <div className="glass-card">
         <div className="card-header-actions mb-4">
           <div className="search-filters">
@@ -198,7 +286,7 @@ export default function Students() {
               <i className="fa-solid fa-magnifying-glass"></i>
               <input 
                 type="text" 
-                placeholder="Search by name or admission #..." 
+                placeholder="Search by name, phone, ID..." 
                 value={search}
                 onChange={handleSearchChange}
               />
@@ -223,10 +311,6 @@ export default function Students() {
               <option value="B">Section B</option>
             </select>
           </div>
-          <button onClick={() => openEnrollModal()} className="btn btn-primary">
-            <i className="fa-solid fa-plus"></i>
-            <span>New Student</span>
-          </button>
         </div>
 
         {/* Data Table */}
@@ -238,7 +322,6 @@ export default function Students() {
                 <th>Full Name</th>
                 <th>Class / Section</th>
                 <th>Parent Name</th>
-                <th>Contact Email</th>
                 <th>Outstanding Fees</th>
                 <th>Actions</th>
               </tr>
@@ -250,10 +333,19 @@ export default function Students() {
                   return (
                     <tr key={s._id}>
                       <td><strong className="text-indigo">{s.admissionNumber}</strong></td>
-                      <td><strong>{s.fullName}</strong></td>
+                      <td>
+                        <div className="student-profile-cell">
+                          <div className="avatar-initials" style={{ backgroundColor: getAvatarBg(s.fullName) }}>
+                            {s.fullName ? s.fullName.charAt(0).toUpperCase() : 'S'}
+                          </div>
+                          <div className="student-meta-cell">
+                            <span className="student-name">{s.fullName}</span>
+                            <span className="student-email">{s.email}</span>
+                          </div>
+                        </div>
+                      </td>
                       <td>{s.classId?.name || 'Class'} ({s.section})</td>
                       <td>{s.parentName}</td>
-                      <td>{s.email}</td>
                       <td>
                         {balance === undefined ? (
                           <span className="text-muted">Loading...</span>
@@ -276,7 +368,7 @@ export default function Students() {
                 })
               ) : (
                 <tr>
-                  <td colSpan="7" className="text-center text-muted">No student records found.</td>
+                  <td colSpan="6" className="text-center text-muted">No student records found.</td>
                 </tr>
               )}
             </tbody>

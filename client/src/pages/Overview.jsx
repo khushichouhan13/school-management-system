@@ -32,28 +32,28 @@ export default function Overview() {
     <div>
       {/* Stats Counters Grid */}
       <div className="stats-grid">
-        <div className="stat-card card-glow-indigo">
+        <div className="stat-card card-students card-glow-indigo">
           <div className="stat-icon"><i className="fa-solid fa-user-graduate"></i></div>
           <div className="stat-content">
             <span className="stat-label">Total Enrolled Students</span>
             <h3>{stats ? stats.totalStudents : '--'}</h3>
           </div>
         </div>
-        <div className="stat-card card-glow-violet">
+        <div className="stat-card card-faculty card-glow-violet">
           <div className="stat-icon"><i className="fa-solid fa-chalkboard-user"></i></div>
           <div className="stat-content">
             <span className="stat-label">Total Faculty Staff</span>
             <h3>{stats ? stats.totalTeachers : '--'}</h3>
           </div>
         </div>
-        <div className="stat-card card-glow-pink">
+        <div className="stat-card card-classes card-glow-pink">
           <div className="stat-icon"><i className="fa-solid fa-school"></i></div>
           <div className="stat-content">
             <span className="stat-label">Active Classes</span>
             <h3>{stats ? stats.totalClasses : '--'}</h3>
           </div>
         </div>
-        <div className="stat-card card-glow-emerald">
+        <div className="stat-card card-attendance card-glow-emerald">
           <div className="stat-icon"><i className="fa-solid fa-calendar-check"></i></div>
           <div className="stat-content">
             <span className="stat-label">Daily Attendance Rate</span>
@@ -68,7 +68,7 @@ export default function Overview() {
         <div className="column-left flex-grow-2">
           {/* Collection Status (Admin Only) */}
           {user?.role === 'admin' && (
-            <div className="glass-card mb-4">
+            <div className="glass-card card-fee mb-4">
               <div className="card-header">
                 <h3><i className="fa-solid fa-wallet"></i> Fee Collection Overview</h3>
                 <span className="badge badge-indigo">Term 2026</span>
