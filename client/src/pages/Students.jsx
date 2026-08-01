@@ -221,34 +221,6 @@ export default function Students() {
 
       {/* Top 4 Cards Grid */}
       <div className="stats-grid mb-4">
-        {/* Card 1: Plans Expiring */}
-        <div className="stat-card card-expiring card-glow-warning">
-          <div className="stat-card-left">
-            <div className="icon-circle icon-circle-warning">
-              <i className="fa-regular fa-clock"></i>
-            </div>
-            <div className="stat-card-info">
-              <span className="stat-card-title">PLANS EXPIRING IN 7 DAYS</span>
-              <span className="stat-badge badge-light-warning">Show</span>
-            </div>
-          </div>
-          <h1 className="stat-card-number text-warning">0</h1>
-        </div>
-
-        {/* Card 2: Expired Plans */}
-        <div className="stat-card card-expired card-glow-danger">
-          <div className="stat-card-left">
-            <div className="icon-circle icon-circle-danger">
-              <i className="fa-solid fa-triangle-exclamation"></i>
-            </div>
-            <div className="stat-card-info">
-              <span className="stat-card-title">EXPIRED PLANS</span>
-              <span className="stat-badge badge-light-danger">Show</span>
-            </div>
-          </div>
-          <h1 className="stat-card-number text-danger">0</h1>
-        </div>
-
         {/* Card 3: Left Students */}
         <div className="stat-card card-left-students card-glow-grey">
           <div className="stat-card-left">

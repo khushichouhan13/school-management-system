@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { AuthContext } from '../App';
+import { Menu, Clock, Sun, Moon } from 'lucide-react';
 
 export default function Header({ activeView }) {
-  const { user, theme, setTheme } = useContext(AuthContext);
+  const { theme, setTheme } = useContext(AuthContext);
   const [timeStr, setTimeStr] = useState('--:-- --');
 
   // Sync clock
@@ -27,33 +28,30 @@ export default function Header({ activeView }) {
     students: 'Student Directory',
     teachers: 'Faculty Directory',
     classes: 'Class & Curriculum Management',
-    fees: 'Student Fee accounts',
+    fees: 'Student Fee Accounts',
     exams: 'Scheduled Exams',
     attendance: 'Daily Roll Call Register',
     'marks-entry': 'Result Grade Sheet',
     profile: 'Student Profile Summary'
   };
 
-  const nameLetter = (user?.profile?.fullName || 'Admin').charAt(0);
-  const mockAvatar = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' fill='%236366f1'><circle cx='50' cy='50' r='50'/><text x='50' y='60' font-family='sans-serif' font-weight='bold' font-size='40' fill='white' text-anchor='middle'>${nameLetter}</text></svg>`;
-  const avatarUrl = user?.profile?.profileImage || mockAvatar;
-
   const toggleSidebarMobile = (e) => {
     e.stopPropagation();
-    document.querySelector('.sidebar').classList.toggle('open');
+    document.querySelector('.sidebar')?.classList.toggle('open');
   };
 
   return (
     <header className="top-header">
       <div className="header-left">
         <button className="sidebar-toggle-btn" onClick={toggleSidebarMobile}>
-          <i class="fa-solid fa-bars"></i>
+          <Menu size={22} />
         </button>
         <h2 className="view-title">{titleMap[activeView] || 'EduNex ERP'}</h2>
       </div>
+      
       <div className="header-right">
         <div className="system-time">
-          <i className="fa-regular fa-clock"></i>
+          <Clock size={16} />
           <span>{timeStr}</span>
         </div>
         
@@ -63,12 +61,8 @@ export default function Header({ activeView }) {
           onClick={toggleTheme} 
           title="Toggle Light/Dark Theme"
         >
-          <i className={theme === 'light' ? 'fa-solid fa-sun' : 'fa-solid fa-moon'}></i>
+          {theme === 'light' ? <Sun size={18} /> : <Moon size={18} />}
         </button>
-
-        <div className="header-profile-quick">
-          <img src={avatarUrl} alt="Avatar" />
-        </div>
       </div>
     </header>
   );

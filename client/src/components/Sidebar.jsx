@@ -1,28 +1,41 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../App';
+import { 
+  LayoutDashboard, 
+  GraduationCap, 
+  Users, 
+  BookOpen, 
+  Wallet, 
+  FileText, 
+  CalendarCheck, 
+  Award,
+  ChevronLeft,
+  ChevronRight,
+  LogOut
+} from 'lucide-react';
 
-export default function Sidebar({ activeView }) {
+export default function Sidebar({ activeView, sidebarCollapsed, toggleSidebarCollapse }) {
   const { user, logout } = useContext(AuthContext);
 
   const adminLinks = [
-    { view: 'overview', label: 'Overview', icon: 'fa-solid fa-chart-pie' },
-    { view: 'students', label: 'Students', icon: 'fa-solid fa-user-graduate' },
-    { view: 'teachers', label: 'Faculty Staff', icon: 'fa-solid fa-chalkboard-user' },
-    { view: 'classes', label: 'Class & subjects', icon: 'fa-solid fa-school' },
-    { view: 'fees', label: 'Finance ledger', icon: 'fa-solid fa-wallet' },
-    { view: 'exams', label: 'Exam schedule', icon: 'fa-solid fa-file-invoice' },
-    { view: 'attendance', label: 'Roll Call Register', icon: 'fa-solid fa-calendar-check' },
-    { view: 'marks-entry', label: 'Grade Entry', icon: 'fa-solid fa-medal' }
+    { view: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { view: 'students', label: 'Students', icon: GraduationCap },
+    { view: 'teachers', label: 'Faculty Staff', icon: Users },
+    { view: 'classes', label: 'Class & subjects', icon: BookOpen },
+    { view: 'fees', label: 'Finance ledger', icon: Wallet },
+    { view: 'exams', label: 'Exam schedule', icon: FileText },
+    { view: 'attendance', label: 'Roll Call Register', icon: CalendarCheck },
+    { view: 'marks-entry', label: 'Grade Entry', icon: Award }
   ];
 
   const teacherLinks = [
-    { view: 'overview', label: 'Overview', icon: 'fa-solid fa-chart-pie' },
-    { view: 'attendance', label: 'Mark Attendance', icon: 'fa-solid fa-calendar-check' },
-    { view: 'marks-entry', label: 'Grade book (Marks)', icon: 'fa-solid fa-medal' }
+    { view: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { view: 'attendance', label: 'Mark Attendance', icon: CalendarCheck },
+    { view: 'marks-entry', label: 'Grade book (Marks)', icon: Award }
   ];
 
   const studentLinks = [
-    { view: 'profile', label: 'My Profile', icon: 'fa-solid fa-user-graduate' }
+    { view: 'profile', label: 'My Profile', icon: GraduationCap }
   ];
 
   let links = [];
@@ -40,14 +53,26 @@ export default function Sidebar({ activeView }) {
   };
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-brand">
-        <i className="fa-solid fa-graduation-cap brand-icon"></i>
-        <span className="brand-text">EDUNEX</span>
+        <div className="brand-logo-area">
+          <GraduationCap className="brand-icon" />
+          <span className="brand-text">EDUNEX</span>
+        </div>
+        
+        {/* Collapse Toggle Button (Desktop Only) */}
+        <button 
+          type="button" 
+          className="btn-sidebar-collapse" 
+          onClick={toggleSidebarCollapse}
+          title={sidebarCollapsed ? "Expand Sidebar" : "Collapse Sidebar"}
+        >
+          {sidebarCollapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+        </button>
       </div>
 
       {/* Profile Card */}
-      <div className="sidebar-user">
+      <div className="sidebar-user" data-tooltip={user?.profile?.fullName || 'Administrator'}>
         <div className="user-avatar-wrapper">
           <img src={avatarUrl} alt="User Avatar" />
         </div>
@@ -62,11 +87,12 @@ export default function Sidebar({ activeView }) {
         <ul className="nav-links">
           {links.map(link => {
             const isActive = activeView === link.view;
+            const Icon = link.icon;
             return (
               <li key={link.view} className={`nav-item ${isActive ? 'active' : ''}`}>
-                <a href={`#${link.view}`} onClick={closeSidebar}>
-                  <i className={link.icon}></i>
-                  <span>{link.label}</span>
+                <a href={`#${link.view}`} onClick={closeSidebar} data-tooltip={link.label}>
+                  <Icon className="nav-icon" />
+                  <span className="nav-label">{link.label}</span>
                 </a>
               </li>
             );
@@ -76,9 +102,9 @@ export default function Sidebar({ activeView }) {
 
       {/* Footer / Logout */}
       <div className="sidebar-footer">
-        <button onClick={logout} className="btn btn-outline btn-block btn-logout">
-          <i className="fa-solid fa-arrow-right-from-bracket"></i>
-          <span>Log Out</span>
+        <button onClick={logout} className="btn btn-outline btn-block btn-logout" data-tooltip="Log Out">
+          <LogOut size={18} />
+          <span className="logout-text">Log Out</span>
         </button>
       </div>
     </aside>

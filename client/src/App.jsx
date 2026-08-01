@@ -1,6 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
+import BottomNavigation from './components/BottomNavigation';
 import Login from './pages/Login';
 import Overview from './pages/Overview';
 import Students from './pages/Students';
@@ -25,12 +26,184 @@ export default function App() {
   const [theme, setTheme] = useState(localStorage.getItem('edunex_theme') || 'dark');
   const [toasts, setToasts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(
+    localStorage.getItem('edunex_sidebar_collapsed') === 'true'
+  );
+
+  const toggleSidebarCollapse = () => {
+    setSidebarCollapsed(prev => {
+      const next = !prev;
+      localStorage.setItem('edunex_sidebar_collapsed', next);
+      return next;
+    });
+  };
 
   // Initialize Theme
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('edunex_theme', theme);
   }, [theme]);
+
+  // Swipe gesture listeners for mobile/desktop off-canvas sidebar
+  useEffect(() => {
+    let startX = null;
+    let startY = null;
+    let currentX = null;
+    let currentY = null;
+    let isDragging = false;
+    const sidebarWidth = 260;
+    let wasOpen = false;
+
+    const handleStart = (clientX, clientY) => {
+      if (window.innerWidth >= 1024) return;
+
+      const sidebar = document.querySelector('.sidebar');
+      if (!sidebar) return;
+
+      wasOpen = sidebar.classList.contains('open');
+
+      // Drag-open triggers from left 35px edge. Drag-close triggers anywhere if open.
+      if (!wasOpen && clientX > 35) return;
+
+      startX = clientX;
+      startY = clientY;
+      currentX = clientX;
+      currentY = clientY;
+      isDragging = false;
+    };
+
+    const handleMove = (clientX, clientY, preventDefaultFn) => {
+      if (window.innerWidth >= 1024) return;
+      if (startX === null || startY === null) return;
+
+      currentX = clientX;
+      currentY = clientY;
+
+      const diffX = currentX - startX;
+      const diffY = currentY - startY;
+
+      const sidebar = document.querySelector('.sidebar');
+      const overlay = document.querySelector('.sidebar-overlay');
+      if (!sidebar || !overlay) return;
+
+      if (!isDragging) {
+        if (Math.abs(diffX) > 10 && Math.abs(diffX) > Math.abs(diffY)) {
+          isDragging = true;
+        }
+      }
+
+      if (isDragging) {
+        if (typeof preventDefaultFn === 'function') preventDefaultFn();
+
+        let translateX = 0;
+        if (!wasOpen) {
+          translateX = Math.max(-sidebarWidth, Math.min(0, -sidebarWidth + diffX));
+        } else {
+          translateX = Math.max(-sidebarWidth, Math.min(0, diffX));
+        }
+
+        sidebar.style.transition = 'none';
+        sidebar.style.left = `${translateX}px`;
+
+        overlay.style.transition = 'none';
+        const progress = (sidebarWidth + translateX) / sidebarWidth;
+        overlay.style.opacity = `${progress}`;
+        overlay.style.pointerEvents = 'auto';
+      }
+    };
+
+    const handleEnd = () => {
+      if (window.innerWidth >= 1024) return;
+      if (startX === null) return;
+
+      const sidebar = document.querySelector('.sidebar');
+      const overlay = document.querySelector('.sidebar-overlay');
+
+      if (isDragging && sidebar && overlay) {
+        const diffX = currentX - startX;
+        sidebar.style.transition = '';
+        overlay.style.transition = '';
+
+        if (!wasOpen) {
+          if (diffX > 75) {
+            sidebar.classList.add('open');
+          } else {
+            sidebar.classList.remove('open');
+          }
+        } else {
+          if (diffX < -75) {
+            sidebar.classList.remove('open');
+          } else {
+            sidebar.classList.add('open');
+          }
+        }
+
+        sidebar.style.left = '';
+        overlay.style.opacity = '';
+        overlay.style.pointerEvents = '';
+      }
+
+      startX = null;
+      startY = null;
+      isDragging = false;
+    };
+
+    const onTouchStart = (e) => {
+      const touch = e.touches[0];
+      handleStart(touch.clientX, touch.clientY);
+    };
+
+    const onTouchMove = (e) => {
+      const touch = e.touches[0];
+      handleMove(touch.clientX, touch.clientY, () => {
+        if (e.cancelable) e.preventDefault();
+      });
+    };
+
+    const onTouchEnd = () => {
+      handleEnd();
+    };
+
+    let isMouseDown = false;
+    const onMouseDown = (e) => {
+      if (e.button !== 0) return;
+      if (e.target.closest('button, input, select, textarea, a')) return;
+      isMouseDown = true;
+      handleStart(e.clientX, e.clientY);
+    };
+
+    const onMouseMove = (e) => {
+      if (!isMouseDown) return;
+      handleMove(e.clientX, e.clientY, () => {
+        if (e.cancelable) e.preventDefault();
+      });
+    };
+
+    const onMouseUp = () => {
+      if (isMouseDown) {
+        isMouseDown = false;
+        handleEnd();
+      }
+    };
+
+    window.addEventListener('touchstart', onTouchStart, { passive: false });
+    window.addEventListener('touchmove', onTouchMove, { passive: false });
+    window.addEventListener('touchend', onTouchEnd);
+
+    window.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
+
+    return () => {
+      window.removeEventListener('touchstart', onTouchStart);
+      window.removeEventListener('touchmove', onTouchMove);
+      window.removeEventListener('touchend', onTouchEnd);
+
+      window.removeEventListener('mousedown', onMouseDown);
+      window.removeEventListener('mousemove', onMouseMove);
+      window.removeEventListener('mouseup', onMouseUp);
+    };
+  }, []);
 
   // Session verification
   useEffect(() => {
@@ -197,8 +370,13 @@ export default function App() {
           <Login />
         ) : (
           <div className="app-container">
-            <div className="dashboard-view">
-              <Sidebar activeView={activeView} />
+            <div className={`dashboard-view ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
+              <Sidebar 
+                activeView={activeView} 
+                sidebarCollapsed={sidebarCollapsed} 
+                toggleSidebarCollapse={toggleSidebarCollapse} 
+              />
+              <div className="sidebar-overlay" onClick={handleContentClick}></div>
               <div className="main-content" onClick={handleContentClick}>
                 <Header activeView={activeView} />
                 <main className="content-body">
@@ -208,6 +386,7 @@ export default function App() {
                 </main>
               </div>
             </div>
+            <BottomNavigation activeView={activeView} />
           </div>
         )}
 
