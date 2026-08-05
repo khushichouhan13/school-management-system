@@ -24,7 +24,7 @@ export default function Header({ activeView }) {
   };
 
   const titleMap = {
-    overview: 'Overview Dashboard',
+    overview: 'Dashboard',
     students: 'Student Directory',
     teachers: 'Faculty Directory',
     classes: 'Class & Curriculum Management',

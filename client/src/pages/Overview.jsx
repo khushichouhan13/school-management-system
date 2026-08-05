@@ -70,7 +70,7 @@ export default function Overview() {
           {user?.role === 'admin' && (
             <div className="glass-card card-fee mb-4">
               <div className="card-header">
-                <h3><i className="fa-solid fa-wallet"></i> Fee Collection Overview</h3>
+                <h3><i className="fa-solid fa-wallet"></i> Fee Collection Dashboard</h3>
                 <span className="badge badge-indigo">Term 2026</span>
               </div>
               <div className="card-body">

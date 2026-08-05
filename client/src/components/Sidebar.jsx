@@ -18,7 +18,7 @@ export default function Sidebar({ activeView, sidebarCollapsed, toggleSidebarCol
   const { user, logout } = useContext(AuthContext);
 
   const adminLinks = [
-    { view: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { view: 'overview', label: 'Dashboard', icon: LayoutDashboard },
     { view: 'students', label: 'Students', icon: GraduationCap },
     { view: 'teachers', label: 'Faculty Staff', icon: Users },
     { view: 'classes', label: 'Class & subjects', icon: BookOpen },
@@ -29,7 +29,7 @@ export default function Sidebar({ activeView, sidebarCollapsed, toggleSidebarCol
   ];
 
   const teacherLinks = [
-    { view: 'overview', label: 'Overview', icon: LayoutDashboard },
+    { view: 'overview', label: 'Dashboard', icon: LayoutDashboard },
     { view: 'attendance', label: 'Mark Attendance', icon: CalendarCheck },
     { view: 'marks-entry', label: 'Grade book (Marks)', icon: Award }
   ];

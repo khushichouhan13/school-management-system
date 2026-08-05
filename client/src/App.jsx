@@ -1,7 +1,6 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
-import BottomNavigation from './components/BottomNavigation';
 import Login from './pages/Login';
 import Overview from './pages/Overview';
 import Students from './pages/Students';
@@ -12,6 +11,14 @@ import Exams from './pages/Exams';
 import Attendance from './pages/Attendance';
 import MarksEntry from './pages/MarksEntry';
 import StudentProfile from './pages/StudentProfile';
+import { 
+  LayoutDashboard, 
+  GraduationCap, 
+  Users, 
+  Wallet, 
+  CalendarCheck, 
+  Award 
+} from 'lucide-react';
 
 // --- Context Definitions ---
 export const AuthContext = createContext(null);
@@ -62,8 +69,8 @@ export default function App() {
 
       wasOpen = sidebar.classList.contains('open');
 
-      // Drag-open triggers from left 35px edge. Drag-close triggers anywhere if open.
-      if (!wasOpen && clientX > 35) return;
+      // Drag-open triggers from left 50px edge. Drag-close triggers anywhere if open.
+      if (!wasOpen && clientX > 50) return;
 
       startX = clientX;
       startY = clientY;
@@ -87,7 +94,7 @@ export default function App() {
       if (!sidebar || !overlay) return;
 
       if (!isDragging) {
-        if (Math.abs(diffX) > 10 && Math.abs(diffX) > Math.abs(diffY)) {
+        if (Math.abs(diffX) > 5 && Math.abs(diffX) > Math.abs(diffY)) {
           isDragging = true;
         }
       }
@@ -341,10 +348,32 @@ export default function App() {
     }
   };
 
+  const adminBottomLinks = [
+    { view: 'overview', label: 'Dashboard', icon: LayoutDashboard },
+    { view: 'students', label: 'Students', icon: GraduationCap },
+    { view: 'teachers', label: 'Staff', icon: Users },
+    { view: 'fees', label: 'Finance', icon: Wallet }
+  ];
+
+  const teacherBottomLinks = [
+    { view: 'overview', label: 'Dashboard', icon: LayoutDashboard },
+    { view: 'attendance', label: 'Attendance', icon: CalendarCheck },
+    { view: 'marks-entry', label: 'Grades', icon: Award }
+  ];
+
+  const studentBottomLinks = [
+    { view: 'profile', label: 'Profile', icon: GraduationCap }
+  ];
+
+  let bottomLinks = [];
+  if (user?.role === 'admin') bottomLinks = adminBottomLinks;
+  else if (user?.role === 'teacher') bottomLinks = teacherBottomLinks;
+  else if (user?.role === 'student') bottomLinks = studentBottomLinks;
+
   return (
     <ToastContext.Provider value={{ showToast }}>
       <AuthContext.Provider value={{ token, user, login, logout, request, theme, setTheme, loading, setLoading }}>
-        
+
         {/* Loading Spinner */}
         {loading && (
           <div className="global-loader">
@@ -356,10 +385,9 @@ export default function App() {
         <div className="toast-container">
           {toasts.map(t => (
             <div key={t.id} className={`toast toast-${t.type}`}>
-              <i className={`fa-solid ${
-                t.type === 'success' ? 'fa-circle-check' :
-                t.type === 'error' ? 'fa-circle-exclamation' : 'fa-triangle-exclamation'
-              } toast-icon`}></i>
+              <i className={`fa-solid ${t.type === 'success' ? 'fa-circle-check' :
+                  t.type === 'error' ? 'fa-circle-exclamation' : 'fa-triangle-exclamation'
+                } toast-icon`}></i>
               <div className="toast-message">{t.message}</div>
             </div>
           ))}
@@ -371,10 +399,10 @@ export default function App() {
         ) : (
           <div className="app-container">
             <div className={`dashboard-view ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
-              <Sidebar 
-                activeView={activeView} 
-                sidebarCollapsed={sidebarCollapsed} 
-                toggleSidebarCollapse={toggleSidebarCollapse} 
+              <Sidebar
+                activeView={activeView}
+                sidebarCollapsed={sidebarCollapsed}
+                toggleSidebarCollapse={toggleSidebarCollapse}
               />
               <div className="sidebar-overlay" onClick={handleContentClick}></div>
               <div className="main-content" onClick={handleContentClick}>
@@ -386,7 +414,26 @@ export default function App() {
                 </main>
               </div>
             </div>
-            <BottomNavigation activeView={activeView} />
+
+            {/* Bottom Navigation Bar for Mobile */}
+            {bottomLinks.length > 0 && (
+              <div className="bottom-nav">
+                {bottomLinks.map(link => {
+                  const isActive = activeView === link.view;
+                  const Icon = link.icon;
+                  return (
+                    <a 
+                      key={link.view} 
+                      href={`#${link.view}`} 
+                      className={`bottom-nav-item ${isActive ? 'active' : ''}`}
+                    >
+                      <Icon className="bottom-nav-icon" />
+                      <span>{link.label}</span>
+                    </a>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
 
