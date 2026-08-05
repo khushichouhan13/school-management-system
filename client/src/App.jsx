@@ -17,7 +17,8 @@ import {
   Users, 
   Wallet, 
   CalendarCheck, 
-  Award 
+  Award,
+  Menu
 } from 'lucide-react';
 
 // --- Context Definitions ---
@@ -352,7 +353,8 @@ export default function App() {
     { view: 'overview', label: 'Dashboard', icon: LayoutDashboard },
     { view: 'students', label: 'Students', icon: GraduationCap },
     { view: 'teachers', label: 'Staff', icon: Users },
-    { view: 'fees', label: 'Finance', icon: Wallet }
+    { view: 'fees', label: 'Finance', icon: Wallet },
+    { view: 'menu', label: 'Menu', icon: Menu }
   ];
 
   const teacherBottomLinks = [
@@ -421,6 +423,25 @@ export default function App() {
                 {bottomLinks.map(link => {
                   const isActive = activeView === link.view;
                   const Icon = link.icon;
+
+                  if (link.view === 'menu') {
+                    return (
+                      <button 
+                        key={link.view} 
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          document.querySelector('.sidebar')?.classList.toggle('open');
+                        }}
+                        className="bottom-nav-item"
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                      >
+                        <Icon className="bottom-nav-icon" />
+                        <span>{link.label}</span>
+                      </button>
+                    );
+                  }
+
                   return (
                     <a 
                       key={link.view} 
